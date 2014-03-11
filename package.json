@@ -1,0 +1,12 @@
+{
+  "name": "playlyfe-website-demo",
+  "description": "A demo showing how playlyfe can be integrated into a website.",
+  "version": "0.0.1",
+  "dependencies": {
+    "express": "~3.5.0",
+    "playlyfe-node-sdk": "~0.1.1"
+  },
+  "devDependencies": {
+    "gulp": "~3.5.5"
+  }
+}
