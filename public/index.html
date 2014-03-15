@@ -8,13 +8,14 @@
     <meta name="author" content="">
     <link rel="shortcut icon" href="../../assets/ico/favicon.ico">
 
-    <title>Jumbotron Template for Bootstrap</title>
+    <title>Playlyfe Demo Website</title>
 
     <!-- Bootstrap core CSS -->
     <link href="components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="styles/site.css" rel="stylesheet">
 
     <!-- Custom styles for this template -->
-    <link href="jumbotron.css" rel="stylesheet">
+    <!-- <link href="jumbotron.css" rel="stylesheet"> -->
 
     <!-- Just for debugging purposes. Don't actually copy this line! -->
     <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
@@ -24,76 +25,137 @@
       <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
       <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script type="text/javascript" src="lib/main.js" ></script>
+    <script type="text/javascript" src="components/bootstrap/dist/js/bootstrap.min.js"></script>
   </head>
 
-  <body>
-
-    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+  <body data-ng-app="plDemo" data-ng-controller="MainCtrl">
+    <div id="player-profile" class="modal fade" data-ng-controller="ProfileCtrl">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3 class="modal-title">{{player.alias}}'s Profile</h3>
+          </div>
+          <div class="modal-body container-fluid">
+            <div class="row">
+              <ul class="nav nav-pills">
+                <li class="active">
+                  <a href="#profile-scores" data-toggle="tab">
+                  <span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;My Scores
+                  </a>
+                  </li>
+                <li>
+                  <a href="#profile-achievements" data-toggle="tab">
+                  <span class="glyphicon glyphicon-bookmark"></span>&nbsp;&nbsp;My Achievements
+                  </a>
+                </li>
+                <li>
+                  <a href="#profile-leaderboard" data-ng-click="leaderboardLoad()" data-toggle="tab">
+                  <span class="glyphicon glyphicon-list"></span>&nbsp;&nbsp;Leaderboard
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div class="row">&nbsp;</div>
+            <div class="row">
+              <div class="tab-content">
+                <div class="tab-pane active" id="profile-scores">
+                  <div class="col-md-4">
+                    <img class="img-thumbnail" src="api/assets/players/{{player.id}}?size=large">
+                  </div>
+                  <div class="col-md-8">
+                    <p>
+                      <h1><strong>{{points}}</strong> Points</h1>
+                    </p>
+                    <hr/>
+                    <p>
+                      <div class="progress progress-striped" title="{{level.description}}">
+                        <div class="progress-bar progress-bar-info" role="progressbar" data-ng-attr-style="width: {{progress}}%" >
+                          {{level.name}}
+                        </div>
+                      </div>
+                    </p>
+                    <p class="text-info">You need {{points_left}} more points to reach {{next_level}} level</p>
+                  </div>
+                </div>
+                <div class="tab-pane" id="profile-achievements">
+                  <div class="row-fluid">
+                    <div style="text-align:center" class="col-md-3" data-ng-repeat="achievement in achievements">
+                      <img data-ng-attr-src="/api/assets/metrics/achievements?item={{achievement.name}}&size=medium" width="72" height="72" title="{{achievement.description}}"></img>
+                      <h5><strong>{{achievement.name}}</strong></h5>
+                    </div>
+                  </div>
+                </div>
+                <div class="tab-pane" id="profile-leaderboard" >
+                  <ul class="list-group">
+                    <li class="list-group-item" data-ng-class="(row.player.id === player.id)? 'list-group-item-info' : ''" data-ng-repeat="row in leaderboard">
+                        <div class="media">
+                          <a class="pull-left" href="#">
+                            <img height="72" width="72" class="media-object img-circle" src="api/assets/players/{{row.player.id}}?size=medium">
+                          </a>
+                          <div class="media-body">
+                            <h2 class="media-heading">{{row.player.alias}}</h2>
+                            <h5 class="text-success"><strong>{{row.score}} Points</strong></h5>
+                          </div>
+                        </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+        </div><!-- /.modal-content -->
+      </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <nav class="navbar navbar-inverse navbar-static-top" role="navigation">
       <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Project name</a>
+        <ul data-ng-show="logged_in" class="nav navbar-nav">
+          <li>
+            <div class="navbar-text">
+              <img src="api/assets/players/{{player.id}}?size=icon">
+              <span>{{player.alias}}</span>
+            </div>
+          </li>
+          <li>
+            <div class="navbar-btn btn btn-success" data-toggle="modal" data-target="#player-profile">View My Profile</div>
+          </li>
+        </ul>
+        <form class="navbar-form navbar-right">
+          <a data-ng-hide="logged_in" href="/auth" class="btn btn-primary">Login with Playlyfe</a>
+          <a data-ng-show="logged_in" href="/logout" data-ng-cloak class="btn ng-cloak btn-primary">Logout</a>
+        </form>
+      </div>
+    </nav>
+    <div class="container" >
+      <div class="jumbotron">
+        <h1><strong>Welcome to the Playlyfe!</strong></h1>
+        <p>Playlyfe breaks down the high entry barrier to applying gamification. Our online gamification platform can be used to model a wide variety of gamified systems. Websites can use Playlyfe to engage their visitors and drive behaviours.</p>
+      </div>
+      <div class="col-md-8">
+        <div data-ng-controller="InteractionCtrl">
+          <button data-ng-click="interact('like')" class="btn btn-primary">Like</button>
+          <button data-ng-click="interact('share')" class="btn btn-primary">Share</button>
+          <button data-ng-click="interact('tweet')" class="btn btn-primary">Tweet</button>
+          <button data-ng-click="interact('watch_video')" class="btn btn-primary">Watch Video</button>
         </div>
-        <div class="navbar-collapse collapse">
-          <form class="navbar-form navbar-right" role="form">
-            <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control">
-            </div>
-            <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control">
-            </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
-          </form>
-        </div><!--/.navbar-collapse -->
+      </div>
+      <div class="col-md-4">
+        <ul>
+          <li data-ng-repeat="notification in notifications">{{notification}}</li>
+        </ul>
+        <hr/>
+        <h5>My Recent Activity</h5>
+        <ul>
+          <li data-ng-repeat="activity in activities">{{activity}}</li>
+        </ul>
       </div>
     </div>
-
-    <!-- Main jumbotron for a primary marketing message or call to action -->
-    <div class="jumbotron">
-      <div class="container">
-        <h1>Hello, world!</h1>
-        <p>This is a template for a simple marketing or informational website. It includes a large callout called a jumbotron and three supporting pieces of content. Use it as a starting point to create something more unique.</p>
-        <p><a class="btn btn-primary btn-lg" role="button">Learn more &raquo;</a></p>
-      </div>
-    </div>
-
-    <div class="container">
-      <!-- Example row of columns -->
-      <div class="row">
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-       </div>
-        <div class="col-md-4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
-          <p><a class="btn btn-default" href="#" role="button">View details &raquo;</a></p>
-        </div>
-      </div>
-
-      <hr>
-
-      <footer>
-        <p>&copy; Company 2014</p>
-      </footer>
-    </div> <!-- /container -->
-
-
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="components/bootstrap/dist/js/bootstrap.min.js"></script>
+    <footer>
+      <p>&copy; Playlyfe 2014</p>
+    </footer>
   </body>
 </html>

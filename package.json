@@ -2,11 +2,22 @@
   "name": "playlyfe-website-demo",
   "description": "A demo showing how playlyfe can be integrated into a website.",
   "version": "0.0.1",
+  "scripts": {
+    "dev": "./node_modules/gulp/bin/gulp.js"
+  },
   "dependencies": {
     "express": "~3.5.0",
     "playlyfe-node-sdk": "~0.1.1"
   },
   "devDependencies": {
-    "gulp": "~3.5.5"
+    "gulp": "~3.5.5",
+    "browserify": "~3.32.1",
+    "debowerify": "~0.7.0",
+    "gulp-coffee": "~1.4.1",
+    "gulp-concat": "~2.1.7",
+    "gulp-uglify": "~0.2.1",
+    "coffeeify": "~0.6.0",
+    "deamdify": "~0.1.1",
+    "browserify-shim": "~3.3.1"
   }
 }
