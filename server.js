@@ -4,12 +4,7 @@ sockjs = require('sockjs');
 
 
 // Put in your application details here.
-var config = {
-  client_id: 'MzQwMGVhMmYtZDUyOC00NGVhLTk1NDgtMzliYjA0ZGQyYzll',
-  client_secret: 'ZWNlZjNhMWUtZWI1Ni00NTZiLWJiMjctNTEwYmRhNTk5YzViZTFkMmFhZTAtYTdhMS0xMWUzLTk0NzUtZGJhMDJlZWFhMjJm',
-  redirect_uri: 'http://localhost:8080/auth/redirect',
-  player_id: 'foo'
-};
+var config = require('./config');
 
 client = new Playlyfe(config);
 
@@ -51,22 +46,26 @@ var authApi = function (req, res, next) {
 };
 
 var proxyApi = function(req, res) {
-  res.header("Cache-Control", "no-cache, no-store, must-revalidate");
-  res.header("Pragma", "no-cache");
-  res.header("Expires", 0);
-  client.api(
-    '/' + (req.params[0] != null ? req.params[0] : ''),
-    req.route.method.toUpperCase(),
-    { qs: req.query, body: req.body },
-    req.session.auth.access_token,
-    function(err, response, body) {
-      res.statusCode = response.statusCode
-      for (header in response.headers) {
-        res.header(header, response.headers[header]);
+  try {
+    res.header("Cache-Control", "no-cache, no-store, must-revalidate");
+    res.header("Pragma", "no-cache");
+    res.header("Expires", 0);
+    client.api(
+      '/' + (req.params[0] != null ? req.params[0] : ''),
+      req.route.method.toUpperCase(),
+      { qs: req.query, body: req.body },
+      req.session.auth.access_token,
+      function(err, response, body) {
+        res.statusCode = response.statusCode
+        for (header in response.headers) {
+          res.header(header, response.headers[header]);
+        }
+        res.end(body);
       }
-      res.end(body);
-    }
-  );
+    );
+  } catch (e) {
+    res.json(500, { error: "server_error", error_description: e.message })
+  }
 }
 
 // start playlyfe oauth authorization code flow
@@ -104,4 +103,4 @@ app.get('/logout', auth, function (req, res) {
   res.redirect('/');
 });
 
-app.listen(8080);
+app.listen(3001);

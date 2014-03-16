@@ -20,6 +20,12 @@ module.exports = [
               url: "#{base_url}/player"
               method: "GET"
             }
+            playerActivityQuery: {
+              url: "#{base_url}/activity"
+              method: "GET"
+              transformResponse: (data, headersGetter) ->
+                { data: JSON.parse(data) }
+            }
             processPlay: {
               url: "#{base_url}/processes/:process_owner/:process_id/play"
               method: "POST"

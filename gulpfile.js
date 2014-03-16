@@ -31,6 +31,10 @@ gulp.task('build-dev', function() {
                   path: './public/components/jquery/dist/jquery.js',
                   exports: '$'
                 },
+                moment: {
+                  path: './public/components/moment/moment.js',
+                  exports: 'moment'
+                },
                 'angular': {
                   path: './public/components/angular/angular.js',
                   depends: {
@@ -50,6 +54,14 @@ gulp.task('build-dev', function() {
                   path: './public/components/angular-sanitize/angular-sanitize.js',
                   depends: {
                     'angular': null
+                  },
+                  exports: null
+                },
+                'angular-moment': {
+                  path: './public/components/angular-moment/angular-moment.js',
+                  depends: {
+                    'angular': null,
+                    'moment': 'moment'
                   },
                   exports: null
                 },

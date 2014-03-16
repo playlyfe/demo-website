@@ -1,7 +1,8 @@
 angular = require 'angular'
 require 'angular-resource'
+require 'angular-moment'
 
-app = angular.module('plDemo', ['ngResource'])
+app = angular.module('plDemo', ['ngResource', 'angularMoment'])
 
 app.provider('Playlyfe', require('./services/playlyfe'))
 app.controller('MainCtrl', require('./controllers/main'))
