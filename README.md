@@ -119,12 +119,12 @@ In this demo we create a simple game which consists of the following components:
     
     This rule determines the level of a player.
     
-    <table class="table fixed no-space">
+    <table>
           <thead>
             <tr>
-              <td class="cell-1"></td>
-              <td class="cell-6">Level</td>
-              <td class="cell-3">Range</td>
+              <th></th>
+              <th>Level</th>
+              <th>Range</th>
             </tr>
           </thead>
           <tbody>
@@ -135,8 +135,9 @@ In this demo we create a simple game which consists of the following components:
               </td>
               <td>
                 0 – 100
-               </td>
+              </td>
             </tr>
+            <tr>
               <td>2</td>
               <td>
                 <strong>Bronze</strong>
@@ -145,6 +146,7 @@ In this demo we create a simple game which consists of the following components:
                 100 – 250
               </td>
             </tr>
+            <tr>
               <td>3</td>
               <td>
                 <strong>Silver</strong>
@@ -153,6 +155,7 @@ In this demo we create a simple game which consists of the following components:
                 250 – 500
               </td>
             </tr>
+            <tr>
               <td>4</td>
               <td>
                 <strong>Gold</strong>
@@ -161,6 +164,7 @@ In this demo we create a simple game which consists of the following components:
                 500 – 1000
               </td>
             </tr>
+            <tr>
               <td>5</td>
               <td>
                 <strong>Platinum</strong>
