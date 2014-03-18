@@ -6,18 +6,21 @@
     "dev": "./node_modules/gulp/bin/gulp.js"
   },
   "dependencies": {
-    "express": "~3.5.0",
-    "playlyfe-node-sdk": "0.2.1"
+    "express": "3.5.0",
+    "playlyfe-node-sdk": "0.2.1",
+    "sockjs": "0.3.8"
   },
   "devDependencies": {
-    "gulp": "~3.5.5",
-    "browserify": "~3.32.1",
-    "debowerify": "~0.7.0",
-    "gulp-coffee": "~1.4.1",
-    "gulp-concat": "~2.1.7",
-    "gulp-uglify": "~0.2.1",
-    "coffeeify": "~0.6.0",
-    "deamdify": "~0.1.1",
-    "browserify-shim": "~3.3.1"
+    "gulp": "3.5.5",
+    "browserify": "3.32.1",
+    "debowerify": "0.7.0",
+    "gulp-coffee": "1.4.1",
+    "gulp-concat": "2.1.7",
+    "gulp-uglify": "0.2.1",
+    "gulp-browserify": "0.5.0",
+    "coffeeify": "0.6.0",
+    "deamdify": "0.1.1",
+    "browserify-shim": "3.3.1",
+    "gulp-rename": "1.2.0"
   }
 }
