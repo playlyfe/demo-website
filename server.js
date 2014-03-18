@@ -11,7 +11,7 @@ client = new Playlyfe(config);
 app = express();
 app.use(express.cookieParser());
 app.use(express.json());
-app.use(express.session({ secret: 'TOP_SECRET' }));
+app.use(express.cookieSession({ secret: 'TOP_SECRET', cookie: { domain: 'demo.playlyfe.com' } }));
 app.use(express.static(__dirname+"/public"));
 app.use(app.router);
 app.use(express.logger());
