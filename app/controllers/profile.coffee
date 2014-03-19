@@ -38,7 +38,10 @@ module.exports = [
             )
             $scope.next_level = level.meta.next
             $scope.points_left = parseInt(level.meta.high) - parseInt($scope.points)
-          else $scope.next_level = null
+          else
+            $scope.level = level.value
+            $scope.progress = 100
+            $scope.next_level = null
         # Set Achievements
         $scope.achievements = []
         achievements = _.find(player.scores, (score) -> score.metric.id is 'achievements')
