@@ -18,7 +18,7 @@ app.use(express.logger());
 app.use(express.errorHandler());
 
 var auth = function (req, res, next) {
-  if (req.session.logged_in) {
+  if (req.session.logged_in && req.session.auth != null) {
     return next();
   } else {
     return res.redirect(client.getAuthorizationURI());
@@ -26,11 +26,17 @@ var auth = function (req, res, next) {
 };
 
 var authApi = function (req, res, next) {
-  if (req.session.logged_in) {
+  if (req.session.logged_in && req.session.auth != null) {
     var token = req.session.auth;
     if (client.isAccessTokenExpired(token)) {
       client.refreshAccessToken(token, function (err, token) {
-        if (err) throw err;
+        if (err) {
+          delete req.session.auth;
+          return res.json(400, {
+            error: 'access_denied',
+            error_description: 'Your authorization attempt failed'
+          });
+        }
         req.session.auth = token;
         return next();
       });
@@ -90,7 +96,7 @@ app.get('/auth/redirect', function (req, res) {
 
 
 // Proxy requests to playlyfe server.
-// We keep the access token away from cheaters by using the authoirization code flow.
+// We keep the access token away from cheaters by using the authorization code flow.
 // This can be integrated with the Playlyfe Javascript SDK to provide secure transparent endpoint for browser clients.
 
 
