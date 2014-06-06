@@ -11,7 +11,7 @@ client = new Playlyfe(config);
 app = express();
 app.use(express.cookieParser());
 app.use(express.json());
-app.use(express.cookieSession({ secret: 'TOP_SECRET', cookie: { domain: 'demo.playlyfe.com' } }));
+app.use(express.cookieSession({ secret: 'TOP_SECRET', cookie: { domain: 'localhost' } }));
 app.use(express.static(__dirname+"/public"));
 app.use(app.router);
 app.use(express.logger());
@@ -62,6 +62,7 @@ var proxyApi = function(req, res) {
       { qs: req.query, body: req.body },
       req.session.auth.access_token,
       function(err, response, body) {
+        if (err) throw err;
         res.statusCode = response.statusCode
         for (header in response.headers) {
           res.header(header, response.headers[header]);
