@@ -250,7 +250,8 @@ In this demo we create a simple game which consists of the following components:
         client_secret: 'YOUR CLIENT SECRET',
         redirect_uri: 'http://localhost:3001/auth/redirect',
         player_id: 'DUMMY PLAYER ID WHICH YOU CREATED IN STEP 3',
-        proxy: 'YOUR HTTP PROXY SETTINGS (Optional)'
+        proxy: 'http://YOUR_USERNAME:YOUR_PASSWORD@YOUR_HTTP_PROXY' // In case you have a proxy setup in your environment.
+    }
     ```
 
   - Build the Application
