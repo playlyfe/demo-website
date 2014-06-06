@@ -246,7 +246,7 @@ In this demo we create a simple game which consists of the following components:
     ```
     // config.js
     module.exports = {
-        client_id: 'YOUR TEST CLIENTxports ID',
+        client_id: 'YOUR TEST CLIENT ID',
         client_secret: 'YOUR CLIENT SECRET',
         redirect_uri: 'http://localhost:3001/auth/redirect',
         player_id: 'DUMMY PLAYER ID WHICH YOU CREATED IN STEP 3'
