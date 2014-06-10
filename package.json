@@ -3,14 +3,16 @@
   "description": "A demo showing how playlyfe can be integrated into a website.",
   "version": "0.0.1",
   "scripts": {
-    "dev": "./node_modules/gulp/bin/gulp.js",
-    "build-dev": "./node_modules/gulp/bin/gulp.js build-dev"
+    "start": "node server.js",
+    "dev": "node ./node_modules/gulp/bin/gulp.js",
+    "build-dev": "node ./node_modules/gulp/bin/gulp.js build-dev"
   },
   "dependencies": {
     "express": "3.5.0",
     "playlyfe-node-sdk": "0.2.2",
     "sockjs": "0.3.8"
   },
+  "license": "MIT",
   "devDependencies": {
     "gulp": "3.5.5",
     "browserify": "3.32.1",
