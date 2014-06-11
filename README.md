@@ -178,10 +178,18 @@ In this demo we create a simple game which consists of the following components:
 
 ### 4. Setup Demo on your machine
 
-  - Clone the git repo
+  - Clone the git repo and switch to the folder
 
     ```
     git clone https://github.com/playlyfe/demo-website.git
+    cd demo-website
+    ```
+
+  - Install required tools (bower and gulp)
+
+    ```
+    npm install -g bower
+    npm install -g gulp
     ```
 
   - Install package dependencies
@@ -245,9 +253,10 @@ In this demo we create a simple game which consists of the following components:
 ## Conclusion
 
 We hope this small sample gives you an idea of what is possible with Playlyfe.
-Feel free to raise an issue or write to [support@playlyfe.com](mailto:support@playlyfe.com)
-in case you have any specific types of features you would wish to implement
-and are not sure how to get it done.
+
+If you are facing any issue with setting up the code, you can [raise an issue](https://github.com/playlyfe/demo-website/issues).
+
+In case you want guidance on how to implement a feature in your app, write to us at [support@playlyfe.com](mailto:support@playlyfe.com).
 
 
 -----

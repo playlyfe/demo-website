@@ -43,9 +43,14 @@ module.exports = [
             $scope.progress = 100
             $scope.next_level = null
         # Set Achievements
-        $scope.achievements = []
-        achievements = _.find(player.scores, (score) -> score.metric.id is 'achievements')
-        for achievement, data of achievements.value
+        $scope.achievements.length = 0
+        achievements = _.find player.scores, (score) ->
+          score.metric.id is 'achievements'
+
+        # If achievement is not found, then don't crash
+        achievements or= value: {}
+
+        for own achievement, data of achievements.value
           $scope.achievements.push {
             name: achievement
             description: data.description
