@@ -17,14 +17,12 @@ In this demo we create a simple game which consists of the following components:
 #### Metrics
 
   1. **Points**
-
     + type: Point Metric
     + minimum: 0
     + maximum: Infinity
     + description: A measure of the players contributions
 
   2. **Levels**
-
     + type: State Metric
     + description: A reprentation of the user's status on the website
     + states:
@@ -36,7 +34,6 @@ In this demo we create a simple game which consists of the following components:
       + Diamond
 
   3. **Achievements**
-
     + type: Set Metric
     + description: The set of achievements that a user earns.
     + items:
@@ -49,28 +46,24 @@ In this demo we create a simple game which consists of the following components:
       + Video Watch Dog
 
   4. **Like**
-
     + type: Point Metric
     + minimum: 0
     + maximum: Infinity
     + description: The number of like a player performs
 
   5. **Share**
-
     + type: Point Metric
     + minimum: 0
     + maximum: Infinity
     + description: The number of shares a player performs
 
   6. **Tweet**
-
     + type: Point Metric
     + minimum: 0
     + maximum: Infinity
     + description: The number of tweets a player does
 
   7. **Video**
-
     + type: Point Metric
     + minimum: 0
     + maximum: Infinity
