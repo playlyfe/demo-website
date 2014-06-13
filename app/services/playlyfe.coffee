@@ -60,20 +60,15 @@ module.exports = [
                       when 'AUTH_CHALLENGE'
                         client.stream.send("AUTH_RESPONSE #{data.token} player #{environment} #{game_id} #{client.player_id}")
                       when 'AUTH_SUCCESS'
-                        console.log("Successfully opened notification stream for player #{client.player_id}")
-                      when 'AUTH_FAILED'
-                        console.log("Failed to open notification stream for player #{client.player_id}")
+                        console.info("Successfully opened notification stream for player #{client.player_id}")
+                      when 'AUTH_FAILED', 'AUTH_FAILED Unauthorized token'
+                        console.warn("Failed to open notification stream for player #{client.player_id}")
                       else
                         client.notificationHandler(JSON.parse(message.data.slice(message.data.indexOf(' '))))
                     return
-
                   client.stream.onmessage = streamAuth
-
-                  data
-
-
-
-                else null
+                  return data
+                null
             }
           })
 
