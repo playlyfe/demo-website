@@ -303,6 +303,11 @@ Once you're done, click **Save** to save this bootstrap data.
 
   - Open the Application in your Browser at [http://localhost:3001](http://localhost:3001)
 
+
+## Known Issues
+
+There is a known issue with Google Chrome, wherein the session cookies are not being set in the browser. We will be fixing it in the next version, until then you can use Firefox for your development purposes.
+
 ## Conclusion
 
 We hope this small sample gives you an idea of what is possible with Playlyfe.
