@@ -86,31 +86,41 @@ In this demo we create a simple game which consists of the following components:
 
     + **Like**
       - Task ID: like
+      - Loop Count: ∞ (Infinity)
       - +5 Points
       - +1 Like
+      - Recurring (found in the <kbd>Score</kbd> tab, under *More Options*)
       - Rate Limit: 5 Times in an Hour
 
     + **Share**
       - Task ID: share
+      - Loop Count: ∞ (Infinity)
       - +10 Points
+      - Recurring
       - +1 Share
       - Rate Limit: 3 Times in 24 Hours
 
     + **Tweet**
       - Task ID: tweet
+      - Loop Count: ∞ (Infinity)
       - +5 Points
+      - Recurring
       - +1 Tweet
       - Rate Limit: 1 Time in an Hour
 
     + **Watch a Video**
       - Task ID: watch_video
+      - Loop Count: ∞ (Infinity)
       - +15 Points
+      - Recurring
       - +1 Video
       - Rate Limit: None
 
     + **Roll a Dice**
       - Task ID: dice_roll
+      - Loop Count: ∞ (Infinity)
       - +30 Point 20% of the Time
+      - Recurring
       - Rate Limit: 10 Times in an Hour
 
 
@@ -120,7 +130,6 @@ In this demo we create a simple game which consists of the following components:
 
     This rule determines the level of a player.
 
-    ----------------------------------------------
     |   | Level               | Range            |
     |---|---------------------|------------------|
     | 1 | Zinc                | 0 - 100          |
@@ -128,7 +137,7 @@ In this demo we create a simple game which consists of the following components:
     | 1 | Silver              | 250 - 500        |
     | 1 | Gold                | 500 - 1000       |
     | 1 | Platinum            | 1000 - Infinity  |
-    ----------------------------------------------
+
 
   2. **Vid Kid**
 
@@ -158,8 +167,30 @@ In this demo we create a simple game which consists of the following components:
 
     This rule awards the Liker Lord Achievement if the player performs a **like atleast 20 times**.
 
+### 2. Setup Bootstrap
 
-### 2. Create a Client
+Once you've got your design ready, you have an option to **Bootstrap** the game. Bootstrapping means that you can:
+
+  - Define the **initial scores** and **badges** each player should start with.
+
+  - Start **process instances** which would show up by default in each player's list of available tasks.
+
+  - Create **teams** which every player will be a part of.
+
+  - Define **roles** which each player will get in each of the teams created above.
+
+In this demo, each player who logs in should have all the tasks *(Like, Share, ...)* available to him from the start. For this, we need to bootstrap an instance of this process.
+
+To do this, go to <kbd>Menu</kbd> <kbd>></kbd> <kbd>Settings</kbd> <kbd>></kbd> <kbd>Game Config</kbd> and select the <kbd>Game Bootstrap</kbd> option in the sidebar.
+
+  Once there, head to the <kbd>Player Processes</kbd> tab, and **Add** a new process. Select the process definition you just created, and give a simple name to it. The **ID** of the process instance will be shown in the next field, which you need to take note of for future purposes.
+
+Once you're done, click **Save** to save this bootstrap data.
+
+**NOTE**: Updating the bootstrap data will **not** affect any old dummy players you had created. Therefore, whenever you are simulating the game after an update (such as updating scores for tasks, updating bootstrap, etc.), create a new dummy player.
+
+
+### 3. Create a Client
 
   - Go to <kbd>Menu</kbd> <kbd>></kbd> <kbd>Settings</kbd> <kbd>></kbd> <kbd>Clients</kbd>
 
@@ -167,16 +198,19 @@ In this demo we create a simple game which consists of the following components:
 
   - Click the Test Client check box. Test clients can be used during development to test your game.
 
-### 3. Simulate your game
+### 4. Simulate your game
 
   - Go to <kbd>Launcher</kbd> <kbd>></kbd> <kbd>Simulate</kbd> and simulate your game.
 
   - Open the Simulator and Create a dummy player.
 
-    This dummy player will the user who we login as will testing the app in development.
+  - **Take note of the player's ID**. We'll be using this player's account to login
+    and test the app in development.
+
+**NOTE**: Each time you make a change in the game design, you have to simulate the game.
 
 
-### 4. Setup Demo on your machine
+### 5. Setup Demo on your machine
 
   - Clone the git repo and switch to the folder
 
@@ -199,41 +233,60 @@ In this demo we create a simple game which consists of the following components:
     bower install
     ```
 
-  - Change the Environment of the Game if you are using a test client
-
-    In the file `app/services/api.coffee` change `production` to `staging`.
-
-  - Rename the config.sample.js file in the root folder, and configure it as below.
+  - Rename the **config.sample.js** file in the root folder to **config.js**, and configure it as below.
 
     ```
     // config.js
     module.exports = {
       /**
-       * ID of the client you create.
+       * Configuration for the client.
+       * This governs how your app connects to the Playlyfe servers.
        */
-      client_id: '<YOUR TEST CLIENT ID>',
-
+      client: {
+        /**
+         * ID of the client you create.
+         */
+        client_id: '<YOUR TEST CLIENT ID>',
+        /**
+         * Client Secret of the client you create.
+         */
+        client_secret: '<YOUR CLIENT SECRET>',
+        /**
+         * Redirect URI of the client you create.
+         */
+        redirect_uri: 'http://localhost:3001/auth/redirect',
+        /**
+         * The ID of the player you create in the Simulator.
+         */
+        player_id: '<DUMMY PLAYER ID WHICH YOU CREATED IN STEP 4>'
+        /** In case you are behind a proxy, uncomment the next line and
+         * add the relevant credentials and host-name:port here.
+         */
+        // proxy: 'http://<YOUR_USERNAME:YOUR_PASSWORD>@<HTTP_PROXY_HOST>:<PROXY_PORT>'
+      },
       /**
-       * Client Secret of the client you create.
+       * Configuration for the app.
+       * This is used by the Angularjs frontend app for making REST calls and
+       * opening sockets for notifications.
        */
-      client_secret: '<YOUR CLIENT SECRET>',
-
-      /**
-       * Redirect URI of the client you create.
-       */
-      redirect_uri: 'http://localhost:3001/auth/redirect',
-
-      /**
-       * The ID of the player you create in the Simulator.
-       */
-      player_id: '<DUMMY PLAYER ID WHICH YOU CREATED IN STEP 3>'
-
-      /** In case you are behind a proxy, uncomment the next line and
-       * add the relevant credentials and host-name:port here.
-       */
-      // proxy: 'http://<YOUR_USERNAME:YOUR_PASSWORD>@<HTTP_PROXY_HOST>:<PROXY_PORT>'
+      app: {
+        /**
+         * The ID of your game
+         */
+        game_id: '<YOUR GAME ID>',
+        /**
+         * The environment you are running your app in ('production'|'staging')
+         * Defaults to 'production'
+         * Use 'staging' while developing/testing the app
+         */
+        environment: 'production',
+        /**
+         * The ID of the process instance you are using for this app.
+         * Get this from the Bootstrap screen of the game.
+         */
+        process_id: '<ID OF THE BOOTSTRAPPED PROCESS>'
+      }
     };
-
     ```
 
   - Build the Application
