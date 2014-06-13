@@ -1,7 +1,7 @@
 {
   "name": "playlyfe-website-demo",
   "description": "A demo showing how playlyfe can be integrated into a website.",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "scripts": {
     "start": "node server.js",
     "dev": "node ./node_modules/gulp/bin/gulp.js",
