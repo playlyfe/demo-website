@@ -69,7 +69,7 @@
               <div class="tab-content">
                 <div class="tab-pane active" id="profile-scores">
                   <div class="col-md-4">
-                    <img class="img-thumbnail" src="api/assets/players/{{player.id}}?size=large">
+                    <img class="img-thumbnail" data-ng-src="api/assets/players/{{player.id}}?size=large">
                   </div>
                   <div class="col-md-8">
                     <p>
@@ -101,7 +101,7 @@
                       <li class="list-group-item" data-ng-class="(row.player.id === player.id)? 'list-group-item-info' : ''" data-ng-repeat="row in leaderboard">
                           <div class="media">
                             <a class="pull-left" href="#">
-                              <img height="72" width="72" class="media-object img-circle" src="api/assets/players/{{row.player.id}}?size=medium">
+                              <img height="72" width="72" class="media-object img-circle" data-ng-src="api/assets/players/{{row.player.id}}?size=medium">
                             </a>
                             <div class="media-body">
                               <h2 class="media-heading">{{row.player.alias}}</h2>
@@ -126,7 +126,7 @@
         <ul data-ng-show="logged_in" class="nav navbar-nav">
           <li>
             <div class="navbar-text">
-              <img src="api/assets/players/{{player.id}}?size=icon">
+              <img data-ng-src="api/assets/players/{{player.id}}?size=icon">
               <span>{{player.alias}}</span>
             </div>
           </li>
@@ -170,8 +170,8 @@
         <ul id="activity-feed" class="list-group">
           <li class="list-group-item" data-ng-repeat="activity in activities">
             <a class="pull-left">
-              <img data-ng-hide="activity.badge" width="40" height="40" class="media-object" src="api/assets/players/{{player.id}}?size=small">
-              <img data-ng-show="activity.badge" width="40" height="40" class="media-object" src="api/assets/metrics/achievements?size=small&item={{activity.badge}}">
+              <img data-ng-hide="activity.badge" width="40" height="40" class="media-object" data-ng-src="api/assets/players/{{player.id}}?size=small">
+              <img data-ng-show="activity.badge" width="40" height="40" class="media-object" data-ng-src="api/assets/metrics/achievements?size=small&item={{activity.badge}}">
             </a>
             <div class="media-body">
               <p data-ng-bind-html="activity.story"></p>
@@ -189,8 +189,8 @@
       <li class="list-group-item notification-item" data-ng-repeat="notification in notifications">
        <div class="media">
          <div class="pull-left">
-           <img data-ng-hide="notification.badge" width="40" height="40" class="media-object" src="api/assets/players/{{notification.player_id}}?size=small">
-           <img data-ng-show="notification.badge" width="40" height="40" class="media-object" src="api/assets/metrics/achievements?size=small&item={{notification.badge}}">
+           <img data-ng-hide="notification.badge" width="40" height="40" class="media-object" data-ng-src="api/assets/players/{{notification.player_id}}?size=small">
+           <img data-ng-show="notification.badge" width="40" height="40" class="media-object" data-ng-src="api/assets/metrics/achievements?size=small&item={{notification.badge}}">
          </div>
          <div class="media-body">
            <h4 data-ng-hide="notification.timeout" class="media-heading"><strong>Congratulations!</strong></h4>
