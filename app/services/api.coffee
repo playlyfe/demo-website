@@ -1,7 +1,10 @@
 module.exports = [
-  'Playlyfe'
-  (Playlyfe) ->
+  'Playlyfe', 'GameId', 'GameEnv'
+  (Playlyfe, GameId, GameEnv) ->
+    # GameId and GameEnv are read from the config.js file.
+    # You only need to configure that file to run this demo.
+
     # If you are using the "test" environment, then
-    # change the second argument from 'production' to 'staging'
-    new Playlyfe('playlyfe_demo_website', 'production')
+    # put app.environment as 'staging' in the config.js file.
+    new Playlyfe(GameId, GameEnv or 'production')
 ]

@@ -1,0 +1,169 @@
+//-
+  We are using jade only because we need to pass-in some data from the config.js
+  file into the Angularjs app.
+
+  So, when the server starts-up, it reads the config file,
+  puts all the data in the `app` object on the <html> node which is picked up
+  effortlessly by Angular (see `app/app.coffee`).
+
+  You can use any other templating tool too, or just use a simple HTML page,
+  but keep in mind to configure you app correctly with the
+  correct game id, environment, process id, etc
+
+doctype html
+html(lang='en', data-game= game_id, data-env= environment, data-process= process_id)
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    link(rel='shortcut icon', href='../../assets/ico/favicon.ico')
+    title Playlyfe Demo Website
+    //
+      Bootstrap core CSS
+    link(href='components/bootstrap/dist/css/bootstrap.min.css', rel='stylesheet')
+    link(href='styles/site.css', rel='stylesheet')
+    //
+      Custom styles for this template
+    //
+       <link href="jumbotron.css" rel="stylesheet">
+    //
+       Just for debugging purposes. Don't actually copy this line!
+    //if lt IE 9
+      script(src='../../assets/js/ie8-responsive-file-warning.js')
+    //
+       HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries
+    //if lt IE 9
+      script(src='https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js')
+      script(src='https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js')
+    script(type='text/javascript', src='lib/main.js')
+    script(type='text/javascript', src='components/bootstrap/dist/js/bootstrap.min.js')
+  body(data-ng-app='plDemo', data-ng-controller='MainCtrl')
+    .splash(data-ng-hide='logged_in')
+      a.btn.btn-lg.btn-default(href='/auth')
+        h2
+          | Login with
+          img(src='http://playlyfe.com/images/logo-playlyfe.png', width='200')
+    #player-profile.modal.fade(data-ng-controller='ProfileCtrl')
+      .modal-dialog
+        .modal-content
+          .modal-header
+            button.close(type='button', data-dismiss='modal', aria-hidden='true') ×
+            h3.modal-title {{player.alias}}'s Profile
+          .modal-body.container-fluid
+            .row
+              .col-md-12
+                ul.nav.nav-pills
+                  li.active
+                    a(href='#profile-scores', data-toggle='tab')
+                      span.glyphicon.glyphicon-user
+                      | My Scores
+                  li
+                    a(href='#profile-achievements', data-toggle='tab')
+                      span.glyphicon.glyphicon-bookmark
+                      | My Achievements
+                  li
+                    a(href='#profile-leaderboard', data-ng-click='leaderboardLoad()', data-toggle='tab')
+                      span.glyphicon.glyphicon-list
+                      | Top 5 Leaderboard
+            .row
+            .row
+              .tab-content
+                #profile-scores.tab-pane.active
+                  .col-md-4
+                    img.img-thumbnail(data-ng-src='api/assets/players/{{player.id}}?size=large')
+                  .col-md-8
+                    p
+                      h1
+                        strong {{points}}
+                        | Points
+                    hr
+                    p
+                      .progress.progress-striped(title='{{level.description}}')
+                        .progress-bar.progress-bar-info(role='progressbar', data-ng-attr-style='width: {{progress}}%')
+                          | {{level.name}}
+                    p.text-info(data-ng-show='next_level') You need {{points_left}} more points to reach {{next_level}} level
+                    h5.text-success(data-ng-hide='next_level') Congratulations! You've attained the highest level
+                #profile-achievements.tab-pane
+                  .row-fluid
+                    .achievement.col-md-3.center-text(data-ng-repeat='achievement in achievements')
+                      img(data-ng-attr-src='/api/assets/metrics/achievements?item={{achievement.name}}&size=medium', width='72', height='72', title='{{achievement.description}}')
+                      h5
+                        strong {{achievement.name}}
+                #profile-leaderboard.tab-pane
+                  .col-md-12
+                    ul.list-group
+                      li.list-group-item(data-ng-class='(row.player.id === player.id)? \'list-group-item-info\' : \'\'', data-ng-repeat='row in leaderboard')
+                        .media
+                          a.pull-left(href='#')
+                            img.media-object.img-circle(height='72', width='72', data-ng-src='api/assets/players/{{row.player.id}}?size=medium')
+                            h2.media-heading {{row.player.alias}}
+                            h5.text-success
+                              strong {{row.score}} Points
+          .modal-footer
+            button.btn.btn-default(type='button', data-dismiss='modal') Close
+        //
+           /.modal-content
+      //
+         /.modal-dialog
+    //
+       /.modal
+    nav.navbar.navbar-inverse.navbar-static-top(data-ng-if='logged_in', role='navigation')
+      .container
+        ul.nav.navbar-nav(data-ng-show='logged_in')
+          li
+            .navbar-text
+              img(data-ng-src='api/assets/players/{{player.id}}?size=icon')
+              span {{player.alias}}
+          li
+            .navbar-btn.btn.btn-success(data-toggle='modal', data-target='#player-profile') View My Profile
+        form.navbar-form.navbar-right
+          a.btn.ng-cloak.btn-primary(data-ng-show='logged_in', href='/logout', data-ng-cloak='data-ng-cloak') Logout
+    .container(data-ng-if='logged_in')
+      .jumbotron
+        h1
+          strong Welcome to the Playlyfe!
+        p
+          | Playlyfe breaks down the high entry barrier to applying gamification. Our online gamification platform can be used to model a wide variety of gamified systems. Websites can use Playlyfe to engage their visitors and drive behaviours.
+      .col-md-8
+        .center-text(data-ng-controller='InteractionCtrl')
+          h3 You can track any user interaction and award points using our API
+          hr
+          .col-md-3
+            .like.box.btn.btn-success(data-ng-click='interact(\'like\')') Like
+          .col-md-3
+            .share.box.btn.btn-primary(data-ng-click='interact(\'share\')') Share
+          .col-md-3
+            .tweet.box.btn.btn-info(data-ng-click='interact(\'tweet\')') Tweet
+          .col-md-3
+            .watch-video.box.btn.btn-warning(data-ng-click='interact(\'watch_video\')') Watch Video
+          .col-md-3
+            .dice-roll.box.btn.btn-danger(data-ng-click='interact(\'dice_roll\')') Roll a Dice
+      .col-md-4
+        h4
+          small My Recent Activity
+        ul#activity-feed.list-group
+          li.list-group-item(data-ng-repeat='activity in activities')
+            a.pull-left
+              img.media-object(data-ng-hide='activity.badge', width='40', height='40', data-ng-src='api/assets/players/{{player.id}}?size=small')
+              img.media-object(data-ng-show='activity.badge', width='40', height='40', data-ng-src='api/assets/metrics/achievements?size=small&item={{activity.badge}}')
+            .media-body
+              p(data-ng-bind-html='activity.story')
+              h5
+                small(am-time-ago='activity.timestamp')
+    footer.container.center-text(data-ng-if='logged_in')
+      p
+        img(src='http://playlyfe.com/images/logo-playlyfe.png', width='100')
+    ul#notification-stream.list-group
+      li.list-group-item.notification-item(data-ng-repeat='notification in notifications')
+        .media
+          .pull-left
+            img.media-object(data-ng-hide='notification.badge', width='40', height='40', data-ng-src='api/assets/players/{{notification.player_id}}?size=small')
+            img.media-object(data-ng-show='notification.badge', width='40', height='40', data-ng-src='api/assets/metrics/achievements?size=small&item={{notification.badge}}')
+          .media-body
+            h4.media-heading(data-ng-hide='notification.timeout')
+              strong Congratulations!
+            h4.media-heading.text-danger(data-ng-show='notification.timeout')
+              strong Take a Break!
+            h5(data-ng-class='notification.timeout ? \'text-danger\':\'text-success\'', data-ng-bind-html='notification.message')

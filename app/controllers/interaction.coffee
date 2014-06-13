@@ -1,11 +1,11 @@
 module.exports = [
-  '$rootScope', '$scope', 'API', '$sce'
-  ($rootScope ,  $scope ,  API ,  $sce) ->
+  '$rootScope', '$scope', 'API', 'ProcessId', '$sce'
+  ($rootScope ,  $scope ,  API ,  ProcessId, $sce) ->
 
     $scope.interact = (interaction) ->
       API.processPlay({
         process_owner: $rootScope.player.id
-        process_id: "bs_2ckq93"
+        process_id: ProcessId
       }, {
         trigger: interaction
       }, (result) ->
