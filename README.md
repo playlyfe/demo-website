@@ -5,6 +5,8 @@ This is a sample project, which shows you how Playlyfe can be integrated into a 
 
 You can see a working example of this demo [here](http://demo.playlyfe.com)
 
+This demo has examples for both the **[Authorization Code Flow](https://github.com/playlyfe/demo-website/tree/master)** (*master* branch) and the **[Client-Credential Flow](https://github.com/playlyfe/demo-website/tree/client-credential-flow)** (*client-credential-flow* branch) which serves as a base for white-label solutions.
+
 ##Setup Instructions
 
 ### 1. Create a Game
