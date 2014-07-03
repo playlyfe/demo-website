@@ -19,12 +19,14 @@ module.exports = [
       switch notification.event
         when 'progress'
           score = _.find(notification.changes, (change) -> change.metric.id is 'points')
+          return unless score?
           data = {
             player_id: $rootScope.player.id
             message: $sce.trustAsHtml("You just earned <strong>#{parseInt(score.delta.new) - parseInt(score.delta.old)}</strong> points !")
           }
         when 'achievement'
           achievement = _.find(notification.changes, (change) -> change.metric.id is 'achievements')
+          return unless achievement?
           badge = _.keys(achievement.delta)[0]
           data = {
             badge: badge
@@ -33,6 +35,7 @@ module.exports = [
           }
         when 'level'
           level = _.find(notification.changes, (change) -> change.metric.id is 'level')
+          return unless level?
           data = {
             player_id: $rootScope.player.id
             message: $sce.trustAsHtml("You attained <strong>#{level.delta.new}</strong> level")
@@ -72,6 +75,7 @@ module.exports = [
       switch activity.event
         when 'progress'
           score = _.find(activity.changes, (change) -> change.metric.id is 'points')
+          return {} unless score?
           if score?
             delta = parseInt(score.delta.new) - parseInt(score.delta.old)
             switch activity.activity.id
@@ -88,9 +92,11 @@ module.exports = [
           else story = null
         when 'level'
           level = _.find(activity.changes, (change) -> change.metric.id is 'level')
+          return {} unless level?
           story = $sce.trustAsHtml("You attained <strong>#{level.delta.new}</strong> level")
         when 'achievement'
           achievement = _.find(activity.changes, (change) -> change.metric.id is 'achievements')
+          return {} unless achievement?
           badge = _.keys(achievement.delta)[0]
           story = $sce.trustAsHtml("You earned the <strong>#{badge}</strong> badge !")
 

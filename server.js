@@ -6,9 +6,12 @@ sockjs = require('sockjs');
 // Put in your application details here.
 var config = require('./config');
 
-client = new Playlyfe(config);
+client = new Playlyfe(config.client);
 
 app = express();
+
+app.set('views', "" + __dirname + "/views");
+app.set('view engine', 'jade');
 app.use(express.cookieParser());
 app.use(express.json());
 app.use(express.cookieSession({ secret: 'TOP_SECRET', cookie: { domain: 'localhost' } }));
@@ -108,6 +111,10 @@ app.get('/logout', auth, function (req, res) {
   req.session.logged_in = false;
   delete req.session.auth;
   res.redirect('/');
+});
+
+app.get('/*', function(req, res) {
+  return res.render('index.jade', config.app);
 });
 
 app.listen(3001);

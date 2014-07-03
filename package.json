@@ -1,7 +1,7 @@
 {
   "name": "playlyfe-website-demo",
   "description": "A demo showing how playlyfe can be integrated into a website.",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "scripts": {
     "start": "node server.js",
     "dev": "node ./node_modules/gulp/bin/gulp.js",
@@ -9,21 +9,27 @@
   },
   "dependencies": {
     "express": "3.5.0",
+    "jade": "1.3.1",
     "playlyfe-node-sdk": "0.2.2",
     "sockjs": "0.3.8"
   },
+  "homepage": "http://demo.playlyfe.com",
+  "author": {
+    "name": "Johny Jose"
+  },
   "license": "MIT",
   "devDependencies": {
-    "gulp": "3.5.5",
     "browserify": "3.32.1",
-    "debowerify": "0.7.0",
-    "gulp-coffee": "1.4.1",
-    "gulp-concat": "2.1.7",
-    "gulp-uglify": "0.2.1",
-    "gulp-browserify": "0.5.0",
+    "browserify-shim": "3.3.1",
     "coffeeify": "0.6.0",
     "deamdify": "0.1.1",
-    "browserify-shim": "3.3.1",
-    "gulp-rename": "1.2.0"
+    "debowerify": "0.7.0",
+    "gulp": "3.5.6",
+    "gulp-browserify": "0.5.0",
+    "gulp-coffee": "1.4.1",
+    "gulp-concat": "2.1.7",
+    "gulp-header": "1.0.2",
+    "gulp-rename": "1.2.0",
+    "gulp-uglify": "0.2.1"
   }
 }
