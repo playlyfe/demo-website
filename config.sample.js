@@ -8,19 +8,19 @@ module.exports = {
     /**
      * ID of the client you create.
      */
-    client_id: '<YOUR TEST CLIENT ID>',
+    clientID: '<YOUR TEST CLIENT ID>',
     /**
      * Client Secret of the client you create.
      */
-    client_secret: '<YOUR CLIENT SECRET>',
+    clientSecret: '<YOUR CLIENT SECRET>',
     /**
-     * Redirect URI of the client you create.
+     * The website for fetching the token
      */
-    redirect_uri: 'http://localhost:3001/auth/redirect',
+    site: 'http://playlyfe.com',
     /**
-     * The ID of the player you create in the Simulator.
+     * The path to fetch the token from
      */
-    player_id: '<DUMMY PLAYER ID WHICH YOU CREATED IN STEP 3>'
+    tokenPath: '/auth/token'
     /** In case you are behind a proxy, uncomment the next line and
      * add the relevant credentials and host-name:port here.
      */

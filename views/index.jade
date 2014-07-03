@@ -40,11 +40,20 @@ html(lang='en', data-game= game_id, data-env= environment, data-process= process
     script(type='text/javascript', src='lib/main.js')
     script(type='text/javascript', src='components/bootstrap/dist/js/bootstrap.min.js')
   body(data-ng-app='plDemo', data-ng-controller='MainCtrl')
-    .splash(data-ng-hide='logged_in')
-      a.btn.btn-lg.btn-default(href='/auth')
-        h2
-          | Login with
-          img(src='http://playlyfe.com/images/logo-playlyfe.png', width='200')
+    .splash(data-ng-hide="logged_in || register_user")
+      form.form-horizontal(role="form")
+        legend Login
+        .form-group
+          label(for="player_id").col-sm-2.control-label ID
+          .col-sm-10
+            input#player_id.form-control(type="text", data-ng-model="user_name")
+        .form-group
+          .col-sm-offset-2.col-sm-10
+            button.btn.btn-default(data-ng-click="login()", data-ng-disabled="!user_name") Sign in
+            button.btn.btn-default(data-ng-click="userRegister()") Register
+        .form-group
+          .col-sm-offset-2.col-sm-10
+            span.help-block {{login_status}}
     #player-profile.modal.fade(data-ng-controller='ProfileCtrl')
       .modal-dialog
         .modal-content

@@ -194,18 +194,13 @@ Once you're done, click **Save** to save this bootstrap data.
 
   - Go to <kbd>Menu</kbd> <kbd>></kbd> <kbd>Settings</kbd> <kbd>></kbd> <kbd>Clients</kbd>
 
-  - Create a client with type backend and redirect `http://localhost:3001/auth/redirect`
+  - Create a new client of type **White Label**
 
   - Click the Test Client check box. Test clients can be used during development to test your game.
 
 ### 4. Simulate your game
 
   - Go to <kbd>Launcher</kbd> <kbd>></kbd> <kbd>Simulate</kbd> and simulate your game.
-
-  - Open the Simulator and Create a dummy player.
-
-  - **Take note of the player's ID**. We'll be using this player's account to login
-    and test the app in development.
 
 **NOTE**: Each time you make a change in the game design, you have to simulate the game.
 
@@ -246,19 +241,15 @@ Once you're done, click **Save** to save this bootstrap data.
         /**
          * ID of the client you create.
          */
-        client_id: '<YOUR TEST CLIENT ID>',
+        clientID: '<YOUR TEST CLIENT ID>',
         /**
          * Client Secret of the client you create.
          */
-        client_secret: '<YOUR CLIENT SECRET>',
-        /**
-         * Redirect URI of the client you create.
-         */
-        redirect_uri: 'http://localhost:3001/auth/redirect',
-        /**
-         * The ID of the player you create in the Simulator.
-         */
-        player_id: '<DUMMY PLAYER ID WHICH YOU CREATED IN STEP 4>'
+        clientSecret: '<YOUR CLIENT SECRET>',
+
+        site: 'http://playlyfe.com',
+
+        tokenPath: '/auth/token',
         /** In case you are behind a proxy, uncomment the next line and
          * add the relevant credentials and host-name:port here.
          */

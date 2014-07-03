@@ -1,9 +1,49 @@
 _ = require 'lodash'
 
 module.exports = [
-  '$rootScope', '$scope', 'API', 'Profile', '$timeout', '$sce'
-  ($rootScope ,  $scope ,  API ,  Profile,   $timeout ,  $sce) ->
+  '$rootScope', '$scope', 'API', 'Profile', '$timeout', '$sce', '$http'
+  ($rootScope ,  $scope ,  API ,  Profile,   $timeout,   $sce ,  $http) ->
     $scope.logged_in = false
+    $scope.register_user = false
+
+    $scope.login = ->
+      $http.post('/login',{
+        player_id: $scope.user_name
+      })
+      .success (data, status, headers, config) ->
+        $scope.logged_in = true
+        $rootScope.$broadcast 'player.load'
+      .error (data, status, headers, config) ->
+        $scope.login_status = "Invalid ID"
+        return
+      return
+
+    $scope.userRegister = ->
+      $scope.register_user = true
+      return
+
+    $scope.userLogin = ->
+      $scope.register_user = false
+      return
+
+    $scope.register = ->
+      if $scope.new_user_id?
+        fixed_user_name = $scope.new_user_id.replace(/([a-z\d])([A-Z]+)/g, '$1_$2')
+                    .replace(/[-\s]+/g, '_')
+                    .replace(/[^A-Za-z0-9_-]/g,'')
+                    .toLowerCase()
+        $http.post('/register', {
+          id: fixed_user_name
+          alias: $scope.new_user_id
+        })
+        .success (data, status, headers , config) ->
+          $scope.login_status = "Registration successful"
+          $scope.register_user = false
+          return
+        .error (data, status, headers , config) ->
+          $scope.reg_status = "Invalid ID"
+          return
+      return
 
     $scope.queueNotification = (notification) ->
       $rootScope.notifications.push notification

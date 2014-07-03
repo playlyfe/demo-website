@@ -1,120 +1,140 @@
 express = require('express');
-Playlyfe = require('playlyfe-node-sdk');
 sockjs = require('sockjs');
+request = require('request');
+cookieParser = require('cookie-parser');
+cookieSession = require('cookie-session');
+logger = require('morgan');
+errorhandler = require('errorhandler');
+bodyParser = require('body-parser');
+_ = require('lodash');
 
 
 // Put in your application details here.
 var config = require('./config');
+oauth = require('simple-oauth2')(config.client);
 
-client = new Playlyfe(config.client);
+var token = {};
 
 app = express();
-
+app.use(cookieParser());
+app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
+app.use(cookieSession({ secret: 'TOP_SECRET', cookie: { domain: 'localhost'} }));
+app.use(express.static(__dirname+"/public"));
+app.use(logger());
+app.use(errorhandler());
 app.set('views', "" + __dirname + "/views");
 app.set('view engine', 'jade');
-app.use(express.cookieParser());
-app.use(express.json());
-app.use(express.cookieSession({ secret: 'TOP_SECRET', cookie: { domain: 'localhost' } }));
-app.use(express.static(__dirname+"/public"));
-app.use(app.router);
-app.use(express.logger());
-app.use(express.errorHandler());
 
-var auth = function (req, res, next) {
-  if (req.session.logged_in && req.session.auth != null) {
-    return next();
-  } else {
-    return res.redirect(client.getAuthorizationURI());
+var getToken = function (callback) {
+  if (_.isEmpty(token) || token.expired()) {
+    oauth.Client.getToken({}, function(err, data) {
+      if(err) callback(err);
+      token = oauth.AccessToken.create(data);
+      callback(null, token);
+    });
   }
 };
 
 var authApi = function (req, res, next) {
   if (req.session.logged_in && req.session.auth != null) {
-    var token = req.session.auth;
-    if (client.isAccessTokenExpired(token)) {
-      client.refreshAccessToken(token, function (err, token) {
-        if (err) {
-          delete req.session.auth;
-          return res.json(400, {
-            error: 'access_denied',
-            error_description: 'Your authorization attempt failed'
+    if (token.expired()) {
+      getToken(function (err, result) {
+        if(err) {
+          return res.json(500, {
+            error: 'server_error',
+            error_description: err.message || "Poof"
           });
         }
-        req.session.auth = token;
-        return next();
+        next();
       });
-    } else {
-      return next();
     }
   } else {
     return res.json(401, {
       error: 'access_denied',
-      error_description: 'You are not authorized to access the API.'
+      error_description: 'You are not authorized on this site'
     });
   }
 };
 
+// Proxy requests to playlyfe server.
 var proxyApi = function(req, res) {
   try {
     res.header("Cache-Control", "no-cache, no-store, must-revalidate");
     res.header("Pragma", "no-cache");
     res.header("Expires", 0);
-    client.api(
-      '/' + (req.params[0] != null ? req.params[0] : ''),
-      req.route.method.toUpperCase(),
-      { qs: req.query, body: req.body },
-      req.session.auth.access_token,
-      function(err, response, body) {
+
+    req.query.access_token = token.token.access_token;
+    if(req.session.auth) {
+      if(req.session.auth.player_id) {
+        req.query.player_id = req.session.auth.player_id;
+      }
+    }
+
+    // uncomment this when the game is in staging
+    req.query.debug = true;
+
+    endpoint = 'http://api.playlyfe.com/v1';
+    url = endpoint+'/'+(req.params[0] != null ? req.params[0] : '');
+
+    request({
+      url: url,
+      method: req.method.toUpperCase(),
+      qs: req.query,
+      headers:{
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(req.body),
+      encoding: null,
+    }, function(err, response, body) {
         if (err) throw err;
-        res.statusCode = response.statusCode
-        for (header in response.headers) {
+        res.statusCode = response.statusCode;
+        for (var header in response.headers) {
           res.header(header, response.headers[header]);
         }
         res.end(body);
-      }
-    );
+      });
   } catch (e) {
-    res.json(500, { error: "server_error", error_description: e.message })
-  }
-}
-
-// start playlyfe oauth authorization code flow
-app.get('/auth', auth, function (req, res) {
-  return res.redirect('/');
-});
-
-// get access token and save it
-app.get('/auth/redirect', function (req, res) {
-  if (req.query.code !== null) {
-    client.getToken(req.query.code, function(err, token) {
-      if (err) return res.json(500, err);
-      req.session.auth = token;
-      req.session.logged_in = true;
-      res.redirect('/');
+    res.json(500, {
+      error: "server_error",
+      error_description: e.message
     });
-  } else {
-    res.redirect('/');
   }
+};
+
+app.get('/api', authApi, proxyApi);
+app.all('/api/*', authApi, proxyApi);
+
+app.post('/login', function(req, res) {
+  req.session.logged_in = true;
+  req.session.auth = {
+    player_id : req.body.player_id
+  };
+
+  req.session.auth.player_id = req.body.player_id;
+  req.params[0] = 'player';
+  req.method = 'GET';
+  proxyApi(req, res);
 });
 
+app.post('/register', function(req, res) {
+  req.params[0]='players';
+  proxyApi(req, res);
+});
 
-
-// Proxy requests to playlyfe server.
-// We keep the access token away from cheaters by using the authorization code flow.
-// This can be integrated with the Playlyfe Javascript SDK to provide secure transparent endpoint for browser clients.
-
-
-app.all('/api/*', authApi, proxyApi);
-app.get('/api', authApi, proxyApi);
-
-app.get('/logout', auth, function (req, res) {
+app.get('/logout', function (req, res) {
   req.session.logged_in = false;
   delete req.session.auth;
   res.redirect('/');
 });
 
-app.get('/*', function(req, res) {
+app.get('/', function(req, res) {
   return res.render('index.jade', config.app);
 });
 
-app.listen(3001);
+app.listen(3001, function(err) {
+  if (err) throw err;
+  getToken(function(err, data) {
+    console.log("Server up");
+  });
+});
