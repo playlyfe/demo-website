@@ -29,7 +29,10 @@ app.set('view engine', 'jade');
 var getToken = function (callback) {
   if (_.isEmpty(token) || token.expired()) {
     oauth.Client.getToken({}, function(err, data) {
-      if(err) callback(err);
+      if(err) {
+        callback(err, null);
+        return;
+      }
       token = oauth.AccessToken.create(data);
       callback(null, token);
     });
@@ -38,7 +41,7 @@ var getToken = function (callback) {
 
 var authApi = function (req, res, next) {
   if (req.session.logged_in && req.session.auth != null) {
-    if (token.expired()) {
+    if (_.isEmpty(token) || token.expired()) {
       getToken(function (err, result) {
         if(err) {
           return res.json(500, {
@@ -135,6 +138,11 @@ app.get('/', function(req, res) {
 app.listen(3001, function(err) {
   if (err) throw err;
   getToken(function(err, data) {
-    console.log("Server up");
+    if (data) {
+      console.log("Server up");
+    } else {
+      console.log("There was an error", err);
+      process.exit();
+    }
   });
 });
