@@ -40,8 +40,8 @@ html(lang='en', data-game= game_id, data-env= environment, data-process= process
     script(type='text/javascript', src='lib/main.js')
     script(type='text/javascript', src='components/bootstrap/dist/js/bootstrap.min.js')
   body(data-ng-app='plDemo', data-ng-controller='MainCtrl')
-    .splash(data-ng-hide="logged_in || register_user")
-      form.form-horizontal(role="form")
+    .splash(data-ng-hide="logged_in")
+      form.form-horizontal(role="form", data-ng-hide="register_user")
         legend Login
         .form-group
           label(for="player_id").col-sm-2.control-label ID
@@ -54,6 +54,20 @@ html(lang='en', data-game= game_id, data-env= environment, data-process= process
         .form-group
           .col-sm-offset-2.col-sm-10
             span.help-block {{login_status}}
+
+      form.form-horizontal(role="form", data-ng-show="register_user")
+        legend Register
+        .form-group
+          label(for="new_player_id").col-sm-2.control-label ID
+          .col-sm-10
+            input#new_player_id.form-control(type="text", data-ng-model="new_user_id")
+        .form-group
+          .col-sm-offset-2.col-sm-10
+            button.btn.btn-default(data-ng-disabled="!new_user_id", data-ng-click="register()") Submit
+            button.btn.btn-default(data-ng-click="userLogin()") Back
+        .form-group
+          .col-sm-offset-2.col-sm-10
+            span.help-block {{reg_status}}
     #player-profile.modal.fade(data-ng-controller='ProfileCtrl')
       .modal-dialog
         .modal-content
